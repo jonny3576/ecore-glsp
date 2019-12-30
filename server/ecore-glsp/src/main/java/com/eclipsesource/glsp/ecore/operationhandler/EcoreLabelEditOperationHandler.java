@@ -40,6 +40,7 @@ import com.eclipsesource.glsp.ecore.EcoreModelIndex;
 import com.eclipsesource.glsp.ecore.ResourceManager;
 import com.eclipsesource.glsp.ecore.enotation.Shape;
 import com.eclipsesource.glsp.ecore.model.EcoreModelState;
+import com.eclipsesource.glsp.ecore.util.EcoreConfig.Types;
 import com.eclipsesource.glsp.graph.GNode;
 
 public class EcoreLabelEditOperationHandler implements OperationHandler {
@@ -58,7 +59,7 @@ public class EcoreLabelEditOperationHandler implements OperationHandler {
 		// If we edit a Label Node (e.g. EAttribute, EEnumLiteral...), eObject will be
 		// defined.
 		// Otherwise, we're editing a Label that isn't a separate semantic element (e.g.
-		// Classifier Name Label),
+		// Classifier Name Label or instance Type Label),
 		// and we'll need to retrieve the top-level semantic element
 		EObject eObject = index.getSemantic(editLabelAction.getLabelId()).orElse(null);
 		if (eObject != null) { // Label Node (List Item)
@@ -96,8 +97,10 @@ public class EcoreLabelEditOperationHandler implements OperationHandler {
 
 			Shape shape = getOrThrow(index.getNotation(eObject), Shape.class,
 					"No shape element for label with id " + editLabelAction.getLabelId() + " found");
-
-			if (eObject instanceof EClassifier) {
+			
+			if (editLabelAction.getLabelId().endsWith(Types.LABEL_INSTANCE)) {
+				((EClassifier) eObject).setInstanceClassName(editLabelAction.getText().trim());
+			} else if (eObject instanceof EClassifier) {
 				((EClassifier) eObject).setName(editLabelAction.getText().trim());
 				// nameChange== uri change so we have to recreate the proxy here
 				shape.setSemanticElement(facade.createProxy(eObject));
