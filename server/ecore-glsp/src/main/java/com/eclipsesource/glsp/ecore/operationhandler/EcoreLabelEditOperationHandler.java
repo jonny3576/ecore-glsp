@@ -115,18 +115,18 @@ public class EcoreLabelEditOperationHandler implements OperationHandler {
 					break;
 
 				case Types.LABEL_EDGE_NAME:
-					GEdge edge = getOrThrow(index.findElementByClass(editLabelAction.getLabelId(), GEdge.class),
-						"No edge for label with id " + editLabelAction.getLabelId() + " found");
-					EReference reference_semantic = (EReference) getOrThrow(index.getSemantic(edge),
-						"No semantic element for labelContainer with id " + edge.getId() + " found");
+					String edgeId = editLabelAction.getLabelId().split("_")[0];
+					EReference reference_semantic = (EReference) getOrThrow(
+						index.getSemantic(edgeId),
+						"No semantic element for labelContainer with id " + edgeId + " found");
 					reference_semantic.setName(editLabelAction.getText().trim());
 					break;
 
 				case Types.LABEL_EDGE_MULTIPLICITY:
-					edge = getOrThrow(index.findElementByClass(editLabelAction.getLabelId(), GEdge.class),
-						"No edge for label with id " + editLabelAction.getLabelId() + " found");
-					reference_semantic = (EReference) getOrThrow(index.getSemantic(edge),
-						"No semantic element for labelContainer with id " + edge.getId() + " found");
+					edgeId = editLabelAction.getLabelId().split("_")[0];
+					reference_semantic = (EReference) getOrThrow(
+						index.getSemantic(edgeId),
+						"No semantic element for labelContainer with id " + edgeId + " found");
 					Pattern pattern = Pattern.compile("\\s*\\[\\s*(\\d+)\\s*\\.+\\s*(\\*|\\d+|\\-1)\\s*\\]\\s*");
 						Matcher matcher = pattern.matcher(editLabelAction.getText());
 						if (matcher.matches()) {

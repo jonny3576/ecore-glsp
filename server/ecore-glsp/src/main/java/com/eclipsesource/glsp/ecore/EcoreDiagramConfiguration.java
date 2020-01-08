@@ -41,7 +41,10 @@ public class EcoreDiagramConfiguration implements DiagramConfiguration {
 	@Override
 	public List<EdgeTypeHint> getEdgeTypeHints() {
 		return Lists.newArrayList(createDefaultEdgeTypeHint(Types.REFERENCE),
-				createDefaultEdgeTypeHint(Types.COMPOSITION), createDefaultEdgeTypeHint(Types.INHERITANCE));
+				createDefaultEdgeTypeHint(Types.COMPOSITION), 
+				createDefaultEdgeTypeHint(Types.INHERITANCE), 
+				createDefaultEdgeTypeHint(Types.BIDIRECTIONAL_REFERENCE) , 
+				createDefaultEdgeTypeHint(Types.BIDIRECTIONAL_COMPOSITION));
 	}
 
 	@Override
@@ -81,6 +84,10 @@ public class EcoreDiagramConfiguration implements DiagramConfiguration {
 				relationGroup);
 		Operation createInheritance = new Operation("Inheritance", Types.INHERITANCE, Operation.Kind.CREATE_CONNECTION,
 				relationGroup);
+		Operation createBiReference = new Operation("Bi-Directional Reference", Types.BIDIRECTIONAL_REFERENCE, Operation.Kind.CREATE_CONNECTION,
+				relationGroup);
+		Operation createBiComposition = new Operation("Bi-Directional Composition", Types.BIDIRECTIONAL_COMPOSITION, Operation.Kind.CREATE_CONNECTION,
+				relationGroup);
 
 		Group featureGroup = new Group("ecore.feature", "Feature");
 		Operation createAttributeOperation = new Operation("Attribute", Types.ATTRIBUTE, Operation.Kind.CREATE_NODE,
@@ -89,7 +96,7 @@ public class EcoreDiagramConfiguration implements DiagramConfiguration {
 				featureGroup);
 		List<Operation> operations = Lists.newArrayList(createEClass, createAbstract, createInterface, createEnum,
 				createDataType, createAttributeOperation, createEnumLiteral, createEcoreEdge, createComposition,
-				createInheritance);
+				createInheritance, createBiReference, createBiComposition);
 		return operations;
 	}
 
@@ -117,6 +124,8 @@ public class EcoreDiagramConfiguration implements DiagramConfiguration {
 		mappings.put(Types.REFERENCE, GraphPackage.Literals.GEDGE);
 		mappings.put(Types.INHERITANCE, GraphPackage.Literals.GEDGE);
 		mappings.put(Types.COMPOSITION, GraphPackage.Literals.GEDGE);
+		mappings.put(Types.BIDIRECTIONAL_REFERENCE, GraphPackage.Literals.GEDGE);
+		mappings.put(Types.BIDIRECTIONAL_COMPOSITION, GraphPackage.Literals.GEDGE);
 		mappings.put(Types.ATTRIBUTE, GraphPackage.Literals.GLABEL);
 		mappings.put(Types.OPERATION, GraphPackage.Literals.GLABEL);
 		mappings.put(Types.ENUMLITERAL, GraphPackage.Literals.GLABEL);
