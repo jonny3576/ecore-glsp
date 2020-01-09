@@ -18,7 +18,9 @@ import { Selector } from "testcafe";
 
 import * as config from "./config.json";
 
-const relPathToWorkspace = resolve(join(__dirname, '..', 'workspace'));
+// Converts Windows paths to all / for integration with theia
+const relPathToWorkspace = resolve(join(__dirname, '..', 'workspace')).replace(/\\/g, "/");
+
 
 class Helper {
     static load = async t => {
@@ -466,10 +468,10 @@ test('Delete Edges with ENTF', async t => {
 
 test('Add Attributes/Literals', async t => {
     const creator = new CreateHelper(t);
-    const attributeClass = Selector('g.node.ecore-node text.sprotty-label').withText('NewEAttribute8 : EString');
-    const attributeAbstract = Selector('g.node.ecore-node text.sprotty-label').withText('NewEAttribute9 : EString');
-    const attributeInterface = Selector('g.node.ecore-node text.sprotty-label').withText('NewEAttribute10 : EString');
-    const attributeEnum = Selector('g.node.ecore-node text.sprotty-label').withText('NewEEnumLiteral11');
+    const attributeClass = Selector('g.node.ecore-node text.sprotty-label').withText('NewEAttribute4 : EString');
+    const attributeAbstract = Selector('g.node.ecore-node text.sprotty-label').withText('NewEAttribute5 : EString');
+    const attributeInterface = Selector('g.node.ecore-node text.sprotty-label').withText('NewEAttribute6 : EString');
+    const attributeEnum = Selector('g.node.ecore-node text.sprotty-label').withText('NewEEnumLiteral7');
 
     await creator.createAllNodeTypes();
     await creator.addAttributes();
@@ -488,18 +490,18 @@ test('Renaming Classes/Attributes', async t => {
     const nameAbstract = creator.nodesSelector.abstractNode;
     const nameInterface = creator.nodesSelector.interfaceNode;
     const nameEnum = creator.nodesSelector.enumNode;
-    const attributeClass = Selector('g.node.ecore-node text.sprotty-label').withText('NewEAttribute8 : EString');
-    const attributeAbstract = Selector('g.node.ecore-node text.sprotty-label').withText('NewEAttribute9 : EString');
-    const attributeInterface = Selector('g.node.ecore-node text.sprotty-label').withText('NewEAttribute10 : EString');
-    const attributeEnum = Selector('g.node.ecore-node text.sprotty-label').withText('NewEEnumLiteral11');
+    const attributeClass = Selector('g.node.ecore-node text.sprotty-label').withText('NewEAttribute4 : EString');
+    const attributeAbstract = Selector('g.node.ecore-node text.sprotty-label').withText('NewEAttribute5 : EString');
+    const attributeInterface = Selector('g.node.ecore-node text.sprotty-label').withText('NewEAttribute6 : EString');
+    const attributeEnum = Selector('g.node.ecore-node text.sprotty-label').withText('NewEEnumLiteral7');
     const attributeClassRenamed = Selector('g.node.ecore-node text.sprotty-label').withText('TestAttributeClass : EString');
-    const attributeAbstractRenamed = Selector('g.node.ecore-node text.sprotty-label').withText('testAttributeAbstract : EString');
+    const attributeAbstractRenamed = Selector('g.node.ecore-node text.sprotty-label').withText('TestAttributeAbstract : EString');
     const attributeInterfaceRenamed = Selector('g.node.ecore-node text.sprotty-label').withText('TestAttributeInterface : EString');
     const attributeEnumRenamed = Selector('g.node.ecore-node text.sprotty-label').withText('TestLiteralEnum');
-    const nameClassRenamed = Selector('g.node.ecore-node text.name.sprotty-label').withText('NewEClass0');
-    const nameAbstractRenamed = Selector('g.node.ecore-node text.name.sprotty-label').withText('NewEClass1');
-    const nameInterfaceRenamed = Selector('g.node.ecore-node text.name.sprotty-label').withText('NewEClass2');
-    const nameEnumRenamed = Selector('g.node.ecore-node text.name.sprotty-label').withText('NewEEnum3');
+    const nameClassRenamed = Selector('g.node.ecore-node text.name.sprotty-label').withText('TestClass');
+    const nameAbstractRenamed = Selector('g.node.ecore-node text.name.sprotty-label').withText('TestAbstract');
+    const nameInterfaceRenamed = Selector('g.node.ecore-node text.name.sprotty-label').withText('TestInterface');
+    const nameEnumRenamed = Selector('g.node.ecore-node text.name.sprotty-label').withText('TestEnum');
     const input = Selector('div.label-edit input');
 
     await creator.createAllNodeTypes();
@@ -529,6 +531,7 @@ test('Renaming Classes/Attributes', async t => {
         .click(attributeEnum)
         .doubleClick(attributeEnum)
         .typeText(input, "TestLiteralEnum")
+        .click(nameClassRenamed)
         .expect(nameClassRenamed.exists).ok("Renamed Class")
         .expect(nameAbstractRenamed.exists).ok("Renamed Abstract")
         .expect(nameInterfaceRenamed.exists).ok("Renamed Interface")
@@ -551,6 +554,7 @@ test('Change Attributetype', async t => {
     await t
         .click(wsSelect)
         .click(glspEcore)
+        .click(attributeSelector)
         .doubleClick(attributeSelector)
         .typeText(input, 'test : EDa')
         .pressKey('ctrl+space')
