@@ -71,3 +71,15 @@ Create a npm user and login to the npm registry, [more on npm publishing](https:
 Publish packages with lerna to update versions properly across local packages, [more on publishing with lerna](https://github.com/lerna/lerna#publish).
 
     npx lerna publish
+
+## Running the testcafe tests
+
+Start the server like described [here](https://github.com/eclipsesource/ecore-glsp/blob/master/README.md).
+
+Start client and the tests. (Client will shutdown after the execution of the tests).
+
+    yarn e2etest
+
+Start the tests if client is already running.
+
+    yarn testcafe:start

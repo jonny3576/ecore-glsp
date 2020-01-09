@@ -186,7 +186,7 @@ const writeQuickAccessBar = async (t, text) => {
 
 const port = process.env.PORT || config.defaultPort;
 
-fixture`Ecore-glsp E2E-Testing`// declare the fixture 
+fixture`Ecore-glsp E2E-Testing`// declare the fixture
     .page`http://localhost:${port}/#${relPathToWorkspace}`
     .beforeEach(async t => {
         await Helper.load(t);
@@ -195,6 +195,7 @@ fixture`Ecore-glsp E2E-Testing`// declare the fixture
 test('Open Workbench', async t => {
     const workspace = Helper.wsSelect();
     await t
+        .wait(5000)
         .click(workspace);
     await checkDefaultWorkbench(t);
 });
