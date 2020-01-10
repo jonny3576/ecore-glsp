@@ -19,14 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EClassifier;
-import org.eclipse.emf.ecore.ENamedElement;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
-
 import com.eclipsesource.glsp.api.jsonrpc.GLSPServerException;
+import com.eclipsesource.glsp.ecore.enotation.Edge;
 import com.eclipsesource.glsp.ecore.model.EcoreModelState;
 import com.eclipsesource.glsp.ecore.util.EcoreConfig.CSS;
 import com.eclipsesource.glsp.ecore.util.EcoreConfig.Types;
@@ -34,11 +28,20 @@ import com.eclipsesource.glsp.graph.GEdge;
 import com.eclipsesource.glsp.graph.GGraph;
 import com.eclipsesource.glsp.graph.GModelElement;
 import com.eclipsesource.glsp.graph.GModelRoot;
+import com.eclipsesource.glsp.graph.GPoint;
 import com.eclipsesource.glsp.graph.builder.impl.GEdgeBuilder;
 import com.eclipsesource.glsp.graph.builder.impl.GEdgePlacementBuilder;
 import com.eclipsesource.glsp.graph.builder.impl.GGraphBuilder;
 import com.eclipsesource.glsp.graph.builder.impl.GLabelBuilder;
 import com.eclipsesource.glsp.graph.util.GConstants;
+import com.eclipsesource.glsp.graph.util.GraphUtil;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.ENamedElement;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
 
 public class GModelFactory extends AbstractGModelFactory<EObject, GModelElement> {
 
@@ -109,7 +112,8 @@ public class GModelFactory extends AbstractGModelFactory<EObject, GModelElement>
 		String target = toId(eReference.getEReferenceType());
 
 		String id = toId(eReference);
-		return new GEdgeBuilder().type(eReference.isContainment() ? Types.COMPOSITION : Types.REFERENCE) //
+
+		GEdgeBuilder builder = new GEdgeBuilder().type(eReference.isContainment() ? Types.COMPOSITION : Types.REFERENCE) //
 				.id(id) //
 				.addCssClass(CSS.ECORE_EDGE) //
 				.addCssClass(eReference.isContainment() ? CSS.COMPOSITION : null) //
@@ -124,8 +128,18 @@ public class GModelFactory extends AbstractGModelFactory<EObject, GModelElement>
 						.text(label).build())
 				.sourceId(source) //
 				.targetId(target) //
-				.routerKind(GConstants.RouterKind.MANHATTAN)//
-				.build();
+				.routerKind(GConstants.RouterKind.MANHATTAN);//
+
+		modelState.getIndex().getNotation(eReference, Edge.class).ifPresent(edge -> {
+
+			if (edge.getBendPoints() != null) {
+				ArrayList<GPoint> gPoints = new ArrayList<>();
+				edge.getBendPoints().forEach(p -> gPoints.add(GraphUtil.copy(p)));
+				builder.addRoutingPoints(gPoints);
+			}
+		});
+
+		return builder.build();
 	}
 
 	public GEdge create(EClass baseClass, EClass superClass) {

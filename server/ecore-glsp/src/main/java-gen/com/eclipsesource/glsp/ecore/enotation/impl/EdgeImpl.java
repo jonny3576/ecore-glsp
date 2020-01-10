@@ -16,20 +16,18 @@
  */
 package com.eclipsesource.glsp.ecore.enotation.impl;
 
-import com.eclipsesource.glsp.ecore.enotation.Edge;
-import com.eclipsesource.glsp.ecore.enotation.EnotationPackage;
-
-import com.eclipsesource.glsp.graph.GPoint;
-
 import java.util.Collection;
 
+import com.eclipsesource.glsp.ecore.enotation.Edge;
+import com.eclipsesource.glsp.ecore.enotation.EnotationPackage;
+import com.eclipsesource.glsp.graph.GPoint;
+
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -86,6 +84,22 @@ public class EdgeImpl extends NotationElementImpl implements Edge {
 			bendPoints = new EObjectContainmentEList<GPoint>(GPoint.class, this, EnotationPackage.EDGE__BEND_POINTS);
 		}
 		return bendPoints;
+	}
+
+	@Override
+	public void setBendPoints(EList<GPoint> newPoints) {
+		this.getBendPoints().clear();
+		this.getBendPoints().addAll(newPoints);
+	}
+
+	public NotificationChain basicSetSize(EList<GPoint> newPoints, NotificationChain msgs) {
+		EList<GPoint> oldPoints = bendPoints;
+		bendPoints = newPoints;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, EnotationPackage.EDGE__BEND_POINTS, oldPoints, newPoints);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
 	}
 
 	/**
