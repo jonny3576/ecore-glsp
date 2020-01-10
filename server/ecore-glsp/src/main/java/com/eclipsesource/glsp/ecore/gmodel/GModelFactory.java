@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
 import com.eclipsesource.glsp.api.jsonrpc.GLSPServerException;
+import com.eclipsesource.glsp.ecore.enotation.Edge;
 import com.eclipsesource.glsp.ecore.model.EcoreModelState;
 import com.eclipsesource.glsp.ecore.util.EcoreConfig.CSS;
 import com.eclipsesource.glsp.ecore.util.EcoreConfig.Types;
@@ -37,12 +38,13 @@ import com.eclipsesource.glsp.graph.GGraph;
 import com.eclipsesource.glsp.graph.GLabel;
 import com.eclipsesource.glsp.graph.GModelElement;
 import com.eclipsesource.glsp.graph.GModelRoot;
+import com.eclipsesource.glsp.graph.GPoint;
 import com.eclipsesource.glsp.graph.builder.impl.GEdgeBuilder;
 import com.eclipsesource.glsp.graph.builder.impl.GEdgePlacementBuilder;
 import com.eclipsesource.glsp.graph.builder.impl.GGraphBuilder;
 import com.eclipsesource.glsp.graph.builder.impl.GLabelBuilder;
 import com.eclipsesource.glsp.graph.util.GConstants;
-import com.eclipsesource.glsp.server.operationhandler.DeleteOperationHandler;
+import com.eclipsesource.glsp.graph.util.GraphUtil;
 
 public class GModelFactory extends AbstractGModelFactory<EObject, GModelElement> {
 
@@ -109,7 +111,7 @@ public class GModelFactory extends AbstractGModelFactory<EObject, GModelElement>
 		String source = toId(eReference.getEContainingClass());
 		String target = toId(eReference.getEReferenceType());
 		String id = toId(eReference);
-		
+
 		GEdgeBuilder builder = new GEdgeBuilder()
 			.id(id) //
 			.addCssClass(CSS.ECORE_EDGE) //
@@ -124,11 +126,20 @@ public class GModelFactory extends AbstractGModelFactory<EObject, GModelElement>
 
 		String labelMultiplicity = createMultiplicity(eReference);
 		String labelName = eReference.getName();
-		return builder
-				.type(eReference.isContainment() ? Types.COMPOSITION : Types.REFERENCE) //
-				.add(createEdgeMultiplicityLabel(labelMultiplicity, id + "_label_multiplicity", 0.5d))
-				.add(createEdgeNameLabel(labelName, id + "_label_name", 0.5d))
-				.build();
+		builder
+			.type(eReference.isContainment() ? Types.COMPOSITION : Types.REFERENCE) //
+			.add(createEdgeMultiplicityLabel(labelMultiplicity, id + "_label_multiplicity", 0.5d))
+			.add(createEdgeNameLabel(labelName, id + "_label_name", 0.5d));
+		
+		modelState.getIndex().getNotation(eReference, Edge.class).ifPresent(edge -> {
+
+			if (edge.getBendPoints() != null) {
+				ArrayList<GPoint> gPoints = new ArrayList<>();
+				edge.getBendPoints().forEach(p -> gPoints.add(GraphUtil.copy(p)));
+				builder.addRoutingPoints(gPoints);
+			}
+		});
+		return builder.build();
 	}
 
 	private GEdge createBidirectionalEdge(EReference eReference, GEdgeBuilder builder) {

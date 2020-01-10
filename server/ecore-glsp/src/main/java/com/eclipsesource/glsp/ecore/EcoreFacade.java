@@ -15,6 +15,7 @@
  ********************************************************************************/
 package com.eclipsesource.glsp.ecore;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,6 +36,7 @@ import com.eclipsesource.glsp.graph.GEdge;
 import com.eclipsesource.glsp.graph.GModelElement;
 import com.eclipsesource.glsp.graph.GModelRoot;
 import com.eclipsesource.glsp.graph.GNode;
+import com.eclipsesource.glsp.graph.GPoint;
 import com.eclipsesource.glsp.graph.GShapeElement;
 import com.eclipsesource.glsp.graph.util.GraphUtil;
 import com.google.common.base.Preconditions;
@@ -206,7 +208,9 @@ public class EcoreFacade {
 	public void updateEdge(Edge edge, GEdge gEdge) {
 		edge.getBendPoints().clear();
 		if (gEdge.getRoutingPoints() != null) {
-			edge.getBendPoints().addAll(gEdge.getRoutingPoints());
+			ArrayList<GPoint> gPoints = new ArrayList<>();
+			gEdge.getRoutingPoints().forEach(p -> gPoints.add(GraphUtil.copy(p)));
+			edge.getBendPoints().addAll(gPoints);
 		}
 	}
 
