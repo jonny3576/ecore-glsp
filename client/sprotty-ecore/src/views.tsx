@@ -147,7 +147,10 @@ export class AggregationEdgeView extends DiamondEdgeView {
 @injectable()
 export class LabelNodeView extends SLabelView {
   render(labelNode: Readonly<SLabelNode>, context: RenderingContext): VNode {
-    const image = require("../images/" + labelNode.imageName);
+      let image;
+      if (labelNode.imageName) {
+          image = require("../images/" + labelNode.imageName);
+      }
 
     const vnode = (
       <g
@@ -155,8 +158,8 @@ export class LabelNodeView extends SLabelView {
         class-mouseover={labelNode.hoverFeedback}
         class-sprotty-label-node={true}
       >
-        <image class-sprotty-icon={true} href={image} y={-4} width={13} height={8}></image>
-        <text class-sprotty-label={true} x={20}>{labelNode.text}</text>
+          { !!image && <image class-sprotty-icon={true} href={image} y={-4} width={13} height={8}></image> }
+        <text class-sprotty-label={true} x={!!image ? 20 : 0}>{labelNode.text}</text>
       </g>
     );
 

@@ -84,7 +84,8 @@ import {
     IconClass,
     SLabelNodeAttribute,
     SLabelNodeLiteral,
-    BidirectionalArrowEdge
+    BidirectionalArrowEdge,
+    SLabelNode
 } from "./model";
 import {
     ArrowEdgeView,
@@ -95,6 +96,7 @@ import {
     InheritanceEdgeView,
     LabelNodeView
 } from "./views";
+
 
 export default (containerId: string) => {
     const classDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
@@ -109,6 +111,7 @@ export default (containerId: string) => {
         configureModelElement(context, 'node:enum', LabeledNode, ClassNodeView);
         configureModelElement(context, 'node:datatype', LabeledNode, ClassNodeView);
         configureModelElement(context, 'label:name', SEditableLabel, SLabelView);
+        configureModelElement(context, 'label:instancename', SLabelNode, LabelNodeView);
         configureModelElement(context, 'label:edge-name', SEditableLabel, SLabelView);
         configureModelElement(context, 'label:edge-multiplicity', SEditableLabel, SLabelView);
         configureModelElement(context, 'node:attribute', SLabelNodeAttribute, LabelNodeView);
