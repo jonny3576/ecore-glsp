@@ -36,7 +36,7 @@ import com.google.common.collect.HashBiMap;
 public class EcoreModelIndex extends GModelIndexImpl {
 	private BiMap<String, EObject> semanticIndex;
 	private Map<EObject, NotationElement> notationIndex;
-	private Set<Integer> bidirectionalReferences;
+	private Set<String> bidirectionalReferences;
 
 	private EcoreModelIndex(EObject target) {
 		super(target);
@@ -156,7 +156,7 @@ public class EcoreModelIndex extends GModelIndexImpl {
 		semanticIndex.inverse().remove(eObject);
 	}
 	
-	public Set<Integer> getBidirectionalReferences() {
+	public Set<String> getBidirectionalReferences() {
 		return bidirectionalReferences;
 	}
 }

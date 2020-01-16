@@ -80,13 +80,13 @@ public class EcoreDiagramConfiguration implements DiagramConfiguration {
 		Group relationGroup = new Group("ecore.relation", "Relation");
 		Operation createEcoreEdge = new Operation("Reference", Types.REFERENCE, Operation.Kind.CREATE_CONNECTION,
 				relationGroup);
-		Operation createComposition = new Operation("Composition", Types.COMPOSITION, Operation.Kind.CREATE_CONNECTION,
+		Operation createComposition = new Operation("Containment", Types.COMPOSITION, Operation.Kind.CREATE_CONNECTION,
 				relationGroup);
 		Operation createInheritance = new Operation("Inheritance", Types.INHERITANCE, Operation.Kind.CREATE_CONNECTION,
 				relationGroup);
 		Operation createBiReference = new Operation("Bi-Directional Reference", Types.BIDIRECTIONAL_REFERENCE, Operation.Kind.CREATE_CONNECTION,
 				relationGroup);
-		Operation createBiComposition = new Operation("Bi-Directional Composition", Types.BIDIRECTIONAL_COMPOSITION, Operation.Kind.CREATE_CONNECTION,
+		Operation createBiComposition = new Operation("Bi-Directional Containment", Types.BIDIRECTIONAL_COMPOSITION, Operation.Kind.CREATE_CONNECTION,
 				relationGroup);
 
 		Group featureGroup = new Group("ecore.feature", "Feature");

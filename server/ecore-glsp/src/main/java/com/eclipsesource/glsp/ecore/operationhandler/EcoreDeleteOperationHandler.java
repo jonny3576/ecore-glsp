@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import com.eclipsesource.glsp.api.model.GraphicalModelState;
 import com.eclipsesource.glsp.ecore.model.EcoreModelState;
+import com.eclipsesource.glsp.ecore.util.EcoreEdgeUtil;
 import com.eclipsesource.glsp.graph.GModelIndex;
 import com.eclipsesource.glsp.server.operationhandler.DeleteOperationHandler;
 
@@ -32,8 +33,8 @@ public class EcoreDeleteOperationHandler extends DeleteOperationHandler {
 		
 		modelState.getIndex().getSemantic(elementId).ifPresent(element -> {
 			if(element instanceof EReference && ((EReference) element).getEOpposite() != null) {
-				EcoreUtil.remove(((EReference) element).getEOpposite());
-				modelState.getIndex().getBidirectionalReferences().remove(element.hashCode());
+				EcoreUtil.delete(((EReference) element).getEOpposite());
+				modelState.getIndex().getBidirectionalReferences().remove(EcoreEdgeUtil.getStringId((EReference)element));
 			}
 		});
 		modelState.getIndex().getSemantic(elementId).ifPresent(EcoreUtil::remove);

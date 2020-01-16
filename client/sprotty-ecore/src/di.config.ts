@@ -68,24 +68,25 @@ import {
 } from "@glsp/sprotty-client/lib";
 import executeCommandModule from "@glsp/sprotty-client/lib/features/execute/di.config";
 import { Container, ContainerModule } from "inversify";
-import {EditLabelUIAutocomplete} from "./features/edit-label-autocomplete";
 import { EditLabelUI } from "sprotty/lib";
+
+import { EditLabelUIAutocomplete } from "./features/edit-label-autocomplete";
 import { LabelSelectionFeedback } from "./feedback";
 import {
     ArrowEdge,
+    BidirectionalArrowEdge,
     CompositionEdge,
-    InheritanceEdge,
-    LabeledNode,
-    SEditableLabel,
+    IconAbstract,
+    IconClass,
     IconDataType,
     IconEnum,
     IconInterface,
-    IconAbstract,
-    IconClass,
+    InheritanceEdge,
+    LabeledNode,
+    SEditableLabel,
+    SLabelNode,
     SLabelNodeAttribute,
-    SLabelNodeLiteral,
-    BidirectionalArrowEdge,
-    SLabelNode
+    SLabelNodeLiteral
 } from "./model";
 import {
     ArrowEdgeView,
@@ -96,7 +97,6 @@ import {
     InheritanceEdgeView,
     LabelNodeView
 } from "./views";
-
 
 export default (containerId: string) => {
     const classDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {

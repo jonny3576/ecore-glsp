@@ -48,6 +48,7 @@ import com.eclipsesource.glsp.graph.GEdge;
 import com.eclipsesource.glsp.graph.GModelElement;
 import com.eclipsesource.glsp.graph.GNode;
 import com.eclipsesource.glsp.ecore.util.EcoreConfig.Types;
+import com.eclipsesource.glsp.ecore.util.EcoreEdgeUtil;
 
 public class EcoreLabelEditOperationHandler implements OperationHandler {
 
@@ -124,7 +125,7 @@ public class EcoreLabelEditOperationHandler implements OperationHandler {
 					break;
 
 				case Types.LABEL_EDGE_NAME:
-					String edgeId = editLabelAction.getLabelId().split("_")[0];
+					String edgeId = EcoreEdgeUtil.getEdgeId(editLabelAction.getLabelId());
 					EReference reference_semantic = (EReference) getOrThrow(
 						index.getSemantic(edgeId),
 						"No semantic element for labelContainer with id " + edgeId + " found");
@@ -132,7 +133,7 @@ public class EcoreLabelEditOperationHandler implements OperationHandler {
 					break;
 
 				case Types.LABEL_EDGE_MULTIPLICITY:
-					edgeId = editLabelAction.getLabelId().split("_")[0];
+					edgeId = EcoreEdgeUtil.getEdgeId(editLabelAction.getLabelId());
 					reference_semantic = (EReference) getOrThrow(
 						index.getSemantic(edgeId),
 						"No semantic element for labelContainer with id " + edgeId + " found");
